@@ -1,3 +1,4 @@
+import { PatientTable } from "@/components/patient-table";
 import ScreeningForm from "@/components/screeningForm";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,10 +34,11 @@ export default function Page() {
           </SheetContent>
         </Sheet>
       </div>
-      <p className="mt-4 text-lg">
+      <p className="mt-4 text-lg mb-4">
         This is the patient page. You can use this page to display patient
         information, appointments, and other patient-related data.
       </p>
+      <PatientTable />
     </section>
   );
 }
