@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Separator } from "./ui/separator";
 
 const questions = [
   {
@@ -504,6 +505,7 @@ const ScreeningForm = ({
 }) => {
   const [currentQuestionId, setCurrentQuestionId] = useState(1);
   const [answers, setAnswers] = useState<any>([]);
+  const [freeSymptoms, setFreeSymptoms] = useState("");
 
   const currentQuestion = questions.find((q) => q.id === currentQuestionId);
 
@@ -521,6 +523,12 @@ const ScreeningForm = ({
         !a.includes("no") && !a.includes("none") && !a.includes("not")
     );
     diagnose(filteredAnswers.join(", "));
+    onClose();
+  };
+
+  const handleFreeSymptoms = () => {
+    const formattedAnswers = freeSymptoms.split(",").map((a) => a.trim());
+    diagnose(formattedAnswers.join(", "));
     onClose();
   };
 
@@ -554,6 +562,35 @@ const ScreeningForm = ({
             </button>
           )}
         </div>
+      </div>
+
+      <div className="flex items-center justify-center mt-4 w-full">
+        <Separator className="flex-1 mr-2 h-4" />
+        OR
+        <Separator className="flex-1 ml-2 h-4" />
+      </div>
+
+      <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md mt-5">
+        <p className="text-sm text-gray-400">
+          If you&apos;re not sure about the answer, you can skip the question
+          and continue by entering the symptoms you&apos;re experiencing.
+          <br /> <br />
+          Enter them comma separated
+        </p>
+
+        <textarea
+          className="w-full py-2 px-4 rounded bg-gray-900 hover:bg-gray-950 focus:ring-gray-800 focus:outline-none focus:ring-2 text-start text-sm mt-4"
+          value={freeSymptoms}
+          onChange={(e) => setFreeSymptoms(e.target.value)}
+          rows={4}
+        />
+
+        <button
+          onClick={handleFreeSymptoms}
+          className=" py-2 px-4 rounded bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:outline-none focus:ring-2 text-center text-sm mt-4"
+        >
+          Continue
+        </button>
       </div>
     </div>
   );

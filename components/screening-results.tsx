@@ -1,24 +1,15 @@
 "use client";
 
 import { map, maxBy } from "lodash";
-import { FC, useState } from "react";
+import { FC } from "react";
 import { Terminal, PieChart } from "lucide-react";
-import {
-  Bar,
-  BarChart,
-  LabelList,
-  PolarAngleAxis,
-  PolarGrid,
-  Radar,
-  RadarChart,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from "recharts";
 import {
   Card,
   CardContent,
   CardDescription,
   CardFooter,
+  CardHeader,
 } from "@/components/ui/card";
 import {
   ChartConfig,
@@ -28,7 +19,6 @@ import {
 } from "@/components/ui/chart";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "./ui/skeleton";
 
 interface ScreeningResultsProps {
@@ -71,15 +61,10 @@ const ScreeningResults: FC<ScreeningResultsProps> = ({ result, ready }) => {
     })
   );
 
-  const availableTags = map(result?.results, (value: { label: any }) => ({
-    label: value.label,
-    value: value.label,
-  }));
-
   const resultedLabel = (maxBy(result?.results, "score") as any)?.label;
 
   return (
-    <div className="flex flex-col items-center justify-center mt-4 md:mt-0">
+    <div className="flex items-stretch justify-start mt-4 md:mt-0">
       {ready === false ? (
         <div>
           <Skeleton className="w-[250px] h-4 my-6" />
@@ -101,6 +86,13 @@ const ScreeningResults: FC<ScreeningResultsProps> = ({ result, ready }) => {
       ) : (
         <div className="flex flex-col md:flex-row justify-start align-baseline">
           <Card className="w-[400px] rounded-md overflow-hidden mb-5">
+            <CardHeader>
+              <p className="text-md text-orange-500">Preliminary results</p>
+              <p className="text-sm text-muted-foreground">
+                This might not be accurate at all times and please wait for the
+                in depth diagnosis for more details
+              </p>
+            </CardHeader>
             <CardContent className=" pt-2 bg-neutral-950/50 pb-7">
               <ChartContainer
                 config={chartConfig}

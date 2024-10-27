@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import * as React from 'react';
+import * as React from "react";
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
-} from '@tanstack/react-table';
+} from "@tanstack/react-table";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 
 import {
   Table,
@@ -17,142 +17,32 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from "@/components/ui/table";
 
-interface MedicalHistory {
-  id: number;
-  patientId: number;
-  specialistId?: number | null;
-  date: string;
-  eventType: string;
-  description: string;
-  provider: string;
-  notes?: string | null;
-}
-
-interface Specialist {
-  id: number;
-  name: string;
-  specialty: string;
-  contact: string;
-  email: string;
-  address: string;
-}
-
-interface Patient {
-  id: number;
-  name: string;
-  dateOfBirth: string;
-  gender: string;
-  address: string;
-  phoneNumber: string;
-  email: string;
-  lifestyleFactors?: string | null;
-  socialHistory?: string | null;
-  familyMemberDisease?: string | null;
-  medicalHistory: MedicalHistory[];
-  specialists: Specialist[];
-}
-
-export const patients: Patient[] = [
+export const columns: ColumnDef<{}>[] = [
   {
-    id: 1,
-    name: 'John Doe',
-    dateOfBirth: '1985-02-14T00:00:00Z',
-    gender: 'Male',
-    address: '123 Main St, Anytown, USA',
-    phoneNumber: '+1234567890',
-    email: 'johndoe85@example.com',
-    lifestyleFactors: 'Average, Balanced diet, Occasionally active',
-    socialHistory: 'Non-smoker, Social drinker, No drug use',
-    familyMemberDisease: 'Heart Disease, Diabetes',
-    medicalHistory: [
-      {
-        id: 1,
-        patientId: 1,
-        specialistId: 3,
-        date: '2023-05-15T00:00:00Z',
-        eventType: 'Checkup',
-        description: 'Annual checkup with blood tests and general assessment.',
-        provider: 'Dr. Smith',
-        notes:
-          'Slight increase in cholesterol levels, recommended diet adjustments.',
-      },
-      {
-        id: 2,
-        patientId: 1,
-        specialistId: 2,
-        date: '2021-12-10T00:00:00Z',
-        eventType: 'Cardiology Consultation',
-        description: 'Consultation due to family history of heart disease.',
-        provider: 'Dr. Lang',
-        notes: 'Scheduled for further tests.',
-      },
-    ],
-    specialists: [
-      {
-        id: 2,
-        name: 'Dr. Lang',
-        specialty: 'Cardiology',
-        contact: '+9876543210',
-        email: 'drlang@clinic.com',
-        address: 'Heart Care Center, 456 Cardio Ave, Metropolis',
-      },
-      {
-        id: 3,
-        name: 'Dr. Smith',
-        specialty: 'General Medicine',
-        contact: '+1234567890',
-        email: 'drsmith@healthcenter.com',
-        address: 'Health Center, 123 Wellness Rd, Anytown',
-      },
-    ],
-  },
-];
-
-const data: Patient[] = patients; // Assigning JSON data
-
-export const columns: ColumnDef<Patient>[] = [
-  {
-    accessorKey: 'lifestyleFactors',
-    header: 'Lifestyle Factors',
+    accessorKey: "type",
+    header: "Type",
     cell: ({ row }) => (
-      <div className='capitalize'>{row.getValue('lifestyleFactors')}</div>
+      <div className="capitalize text-yellow-600 border-r-2 border-slate-500">
+        {row.getValue("type")}
+      </div>
     ),
   },
   {
-    accessorKey: 'description',
-    header: 'Medical History',
-    accessorFn: (row) => row.medicalHistory[0].description,
+    accessorKey: "value",
+    header: "Data",
     cell: ({ row }) => (
-      <div className='capitalize'>{row.getValue('description')}</div>
-    ),
-  },
-  {
-    accessorKey: 'notes',
-    header: 'Medical History Notes',
-    accessorFn: (row) => row.medicalHistory[0].notes,
-    cell: ({ row }) => (
-      <div className='capitalize'>{row.getValue('notes')}</div>
-    ),
-  },
-  {
-    accessorKey: 'socialHistory',
-    header: ({}) => <Button variant='ghost'>Social History</Button>,
-    cell: ({ row }) => (
-      <div className='lowercase'>{row.getValue('socialHistory')}</div>
-    ),
-  },
-  {
-    accessorKey: 'familyMemberDisease',
-    header: ({}) => <Button variant='ghost'>Family Member Disease</Button>,
-    cell: ({ row }) => (
-      <div className='lowercase'>{row.getValue('familyMemberDisease')}</div>
+      <div className="capitalize">{row.getValue("value")}</div>
     ),
   },
 ];
 
-export function PatientTable() {
+export function PatientTable({
+  data,
+}: {
+  data: { type: string; value: string }[];
+}) {
   const table = useReactTable({
     data,
     columns,
@@ -160,8 +50,8 @@ export function PatientTable() {
   });
 
   return (
-    <div className='overflow-hidden rounded border-2 border-slate-500  shadow-lg  p-2'>
-      <Table className='w-full'>
+    <div className="overflow-hidden rounded shadow-md p-2 w-full shadow-gray-700">
+      <Table className="w-full">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -183,9 +73,11 @@ export function PatientTable() {
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}
-                data-state={row.getIsSelected() && 'selected'}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                data-state={row.getIsSelected() && "selected"}
+                className="hover:bg-gray-900"
+              >
+                {row.getVisibleCells().map((cell, i) => (
+                  <TableCell key={cell.id} className={i === 0 ? "w-1/6" : ""}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -193,7 +85,7 @@ export function PatientTable() {
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className='h-24 text-center'>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
                 No results.
               </TableCell>
             </TableRow>

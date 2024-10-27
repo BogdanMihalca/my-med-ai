@@ -33,16 +33,16 @@ export const POST = async function POST(request: NextRequest) {
 
   // Sort by value and return the top 5 and the remaining difference as "others"
   const sortedResults = Object.entries(resultObject)
-    .sort(([, a], [, b]) => b - a)
+    .sort(([, a], [, b]) => (b as number) - (a as number))
     .map(([label, score]) => ({ label, score }));
 
   const filteredResults = sortedResults.slice(0, 7);
-  const othersScore = 1 - filteredResults.reduce((a, b) => a + b.score, 0);
+  const othersScore =
+    1 - filteredResults.reduce((a, b) => a + (b.score as number), 0);
   filteredResults.push({ label: "others", score: othersScore });
 
   return NextResponse.json({
     results: filteredResults,
-
     bestResult: labels[resultArray.indexOf(Math.max(...resultArray))],
     text: text,
   });
