@@ -128,3 +128,4 @@ We welcome contributions to improve the platform. Please read our contributing g
 - Briana Filip - brianafilip.13@mail.com
 - Pop Lucian - lucipop1@hotmail.com
 - Botis Vlad - vgbotis@gmail.com
+- Bogdan Mihalca - mihalca_b@yahoo.ro
