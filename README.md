@@ -1,36 +1,130 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# AI-Driven Healthcare Platform
+
+A Next.js-based medical referral system that uses AI to streamline the connection between patients and specialists, developed for the Faithbase HackTech Challenge.
+
+## Problem Statement
+
+In healthcare systems worldwide, particularly in Romania, the referral process between primary care physicians and specialists faces significant challenges:
+
+- Inefficient medical referrals
+- Redundant testing and diagnosis
+- Delays in treatment for critical conditions
+- Poor patient outcomes due to lack of timely specialist care
+
+These issues not only affect patient health but also contribute to healthcare system inefficiencies, increasing costs and resource strain.
+
+## Solution Overview
+
+Our AI-powered medical referral system streamlines and automates the referral process using advanced machine learning models, including BERT and integration with OpenAI's capabilities.
+
+### Key Features
+
+#### For Patients
+
+- **Smart Account Management:** Secure patient portal for managing medical information
+- **AI-Powered Symptom Analysis:**
+  - Utilizes a custom BERT model trained on the SymptomsDisease246k dataset
+  - Processes patient symptoms to suggest potential diagnoses
+- **Intelligent Specialist Matching:** Recommends appropriate specialists based on AI analysis
+- **Secure Medical Record Management:** Complete control over personal health information sharing
+
+#### For Specialists
+
+- **Professional Dashboard:** Comprehensive view of patient referrals and appointments
+- **Patient History Access:** Secure access to shared patient records
+- **Schedule Optimization:** AI-driven appointment scheduling based on urgency and availability
+
+### Technical Implementation
+
+#### Machine Learning Model
+
+- **Dataset:** [SymptomsDisease246k](https://huggingface.co/datasets/fhai50032/SymptomsDisease246k)
+  - 246,000+ symptom-disease pairs
+  - Used for training our BERT model in symptom analysis
+- **Model Architecture:**
+  - Fine-tuned BERT model for symptom classification
+  - Custom tokenization and preprocessing pipeline
+  - Weighted prediction system for accurate disease prediction
+
+#### Tech Stack
+
+- Next.js for frontend and API routes
+- BERT model for symptom analysis
+- OpenAI integration for advanced diagnostics
+- Secure authentication and data encryption
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the repository
+
+```bash
+git clone [repository-url]
+```
+
+2. Install dependencies
+
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Set up environment variables
+
+```bash
+cp .env.example .env.local
+```
+
+4. Run the development server
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The application will be available at [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Future Roadmap
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- OCR integration for paper document digitization
+- Telehealth platform integration
+- Personalized treatment plan generation
+- Medication management system
+- Real-time symptom tracking
 
-## Learn More
+## Benefits
 
-To learn more about Next.js, take a look at the following resources:
+- **Faster Care Access:** Streamlined referral process for timely specialist care
+- **Reduced Administration:** Automated processes save time for healthcare providers
+- **Improved Accuracy:** AI-driven matching ensures appropriate specialist referrals
+- **Better Resource Management:** Optimized scheduling and resource allocation
+- **Enhanced Patient Experience:** User-friendly interface and improved care coordination
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Security and Compliance
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- HIPAA-compliant data handling
+- End-to-end encryption for sensitive information
+- Regular security audits and updates
+- Patient-controlled data sharing
 
-## Deploy on Vercel
+## Contributing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+We welcome contributions to improve the platform. Please read our contributing guidelines before submitting pull requests.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## License
+
+[Add License Information]
+
+## Acknowledgments
+
+- Faithbase HackTech mentors for the challenge opportunity
+- The Hugging Face team for providing the SymptomsDisease246k dataset
+- All contributors and participants in the hackathon
+
+## Contact
+
+- Adela Tanca - adeltaancaa@gmail.com
+- Briana Filip - brianafilip.13@mail.com
+- Pop Lucian - lucipop1@hotmail.com
+- Botis Vlad - vgbotis@gmail.com
