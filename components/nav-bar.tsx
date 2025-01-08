@@ -11,6 +11,7 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { LoginButton } from "./login-button";
 
 export function Navbar() {
   const [isOfferDismissed, setIsOfferDismissed] =
@@ -83,16 +84,7 @@ export function Navbar() {
             </NavigationMenuItem>
 
             <NavigationMenuItem>
-              <Link href="/get-started" legacyBehavior passHref>
-                <NavigationMenuLink
-                  className={cn(
-                    navigationMenuTriggerStyle(),
-                    "bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-md font-medium transform hover:scale-105 transition-all"
-                  )}
-                >
-                  Get Started
-                </NavigationMenuLink>
-              </Link>
+              <LoginButton />
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
