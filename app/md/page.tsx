@@ -65,7 +65,7 @@ const Page = () => {
           <h1 className="text-2xl font-bold text-white">
             Welcome back, Dr. Smith
           </h1>
-          <p className="text-gray-400">Here's your practice overview</p>
+          <p className="text-gray-400">Here&apos;s your practice overview</p>
         </div>
         <button className="p-2 bg-gray-800 rounded-full">
           <Bell className="h-6 w-6 text-gray-400" />
@@ -95,7 +95,9 @@ const Page = () => {
       {/* Appointments */}
       <Card className="bg-gray-800 border-gray-700">
         <CardHeader>
-          <CardTitle className="text-white">Today's Appointments</CardTitle>
+          <CardTitle className="text-white">
+            Today&apos;s Appointments
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="divide-y divide-gray-700">

@@ -8,12 +8,13 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, Phone, Clock, MapPin, Star } from "lucide-react";
+import Image from "next/image";
 
 const SpecialistCard = ({ specialist }: any) => (
   <Card className="flex-1 min-w-[300px] bg-slate-800 border-slate-700 hover:bg-slate-700/50 transition-colors">
     <CardHeader className="flex flex-row items-start gap-4">
       <div className="w-20 h-20 rounded-full overflow-hidden bg-slate-700 flex-shrink-0 border-2 border-blue-400/20">
-        <img
+        <Image
           src={specialist.imageUrl}
           alt={specialist.name}
           className="w-full h-full object-cover"
