@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/nav-bar";
 import { Toaster } from "@/components/ui/toaster";
+import Footer from "@/components/footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,20 +19,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className} suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
-          enableSystem
           disableTransitionOnChange
         >
           <Navbar />
-          <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
-            <main style={{ minHeight: "75vh", maxWidth: "calc(100vw - 30px)" }}>
-              {children}
-            </main>
-          </div>
+
+          <main className="mx-auto">{children}</main>
+
+          <Footer />
+
           <Toaster />
         </ThemeProvider>
       </body>

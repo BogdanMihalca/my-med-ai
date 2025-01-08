@@ -29,9 +29,6 @@ interface ScreeningResultsProps {
 }
 
 const ScreeningResults2: FC<ScreeningResultsProps> = ({ result, ready }) => {
-  console.log("ready---> ", ready);
-  console.log("ready === false---> ", ready === false);
-
   const chartConfig = map(
     result?.possible_diseases,
     (value: { label: any; score: number }, key: number) => ({

@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { softmax, Tensor } from "@xenova/transformers";
-// import labels from "./label_mapping.json";
-
 import OpenAI from "openai";
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
