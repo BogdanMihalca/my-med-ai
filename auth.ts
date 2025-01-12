@@ -12,7 +12,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 declare module "next-auth" {
   interface Session {
-    user: {
+    user?: {
       id: string;
       name: string;
       email: string;

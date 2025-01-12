@@ -96,7 +96,7 @@ cp .env.example .env.local
 Required environment variables:
 
 - `DATABASE_URL` - Neon database connection string
-- `NEXTAUTH_SECRET` - Authentication secret
+- `AUTH_SECRET` - Authentication secret
 - `GOOGLE_CLIENT_ID` - Google OAuth client ID
 - `GOOGLE_CLIENT_SECRET` - Google OAuth client secret
 - `OPENAI_API_KEY` - OpenAI API key
