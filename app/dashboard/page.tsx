@@ -60,7 +60,7 @@ const Page = async () => {
 
   const stats = [
     { title: "Total Patients", value: "147", icon: Users },
-    { title: "Today's Appointments", value: "12", icon: Calendar },
+    { title: "Today&apos;s Appointments", value: "12", icon: Calendar },
     { title: "Pending Reviews", value: "8", icon: Clock },
     { title: "Patient Recovery", value: "94%", icon: Activity },
   ];
@@ -80,7 +80,7 @@ const Page = async () => {
                 Welcome back, {session?.user?.name || "Doctor"}
               </h1>
               <p className="text-gray-400 text-lg">
-                Here's your practice overview
+                Here&apos;s your practice overview
               </p>
             </div>
             <button className="p-3 bg-gray-800 rounded-full hover:bg-gray-700 transition-colors">
@@ -120,7 +120,7 @@ const Page = async () => {
             <CardHeader className="border-b border-gray-700">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent flex items-center gap-2">
-                  Today's Appointments
+                  Today&apos;s Appointments
                   <Sparkles className="h-5 w-5 text-blue-400" />
                 </CardTitle>
                 <span className="text-sm text-gray-400">View all</span>

@@ -21,7 +21,7 @@ export const GET = auth(async function GET(req) {
       { status: 500 }
     );
   }
-});
+}) as any;
 
 export const PUT = auth(async function PUT(req) {
   if (!req.auth) {
@@ -45,4 +45,4 @@ export const PUT = auth(async function PUT(req) {
       { status: 500 }
     );
   }
-});
+}) as any;
