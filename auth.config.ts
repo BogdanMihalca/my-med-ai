@@ -1,6 +1,6 @@
 import Google from "next-auth/providers/google";
 import type { NextAuthConfig } from "next-auth";
-import prisma from "./prisma/prisma";
+// import prisma from "./prisma/prisma";
 
 // Notice this is only an object, not a full Auth.js instance
 export default {
@@ -14,13 +14,14 @@ export default {
       return token;
     },
     async session({ session, token }) {
-      const currentUser = await prisma.user.findUnique({
-        where: {
-          id: token.id as string,
-        },
-      });
+      // const currentUser = await prisma.user.findUnique({
+      //   where: {
+      //     id: token.id as string,
+      //   },
+      // });
 
-      session.user = currentUser as any;
+      session.user.id = token.id as string;
+      session.user.role = "PATIENT"; //hardcoded because of vercel middleware size limit
       return session;
     },
   },
