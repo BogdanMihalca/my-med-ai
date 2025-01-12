@@ -16,7 +16,7 @@ import { redirect } from "next/navigation";
 
 const Page = async () => {
   const session = await auth();
-  if (session?.user.role !== "DOCTOR") {
+  if (session?.user?.role !== "DOCTOR") {
     redirect("/");
   }
 

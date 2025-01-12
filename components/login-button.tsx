@@ -114,7 +114,7 @@ export function LoginButton() {
               value="DOCTOR"
               aria-label="Toggle doctor"
               className={`flex items-center gap-1 ${
-                session.user.role === "DOCTOR" ? "text-purple-500" : ""
+                session?.user?.role === "DOCTOR" ? "text-purple-500" : ""
               }`}
             >
               <div className="flex items-center gap-1">
@@ -128,7 +128,7 @@ export function LoginButton() {
               aria-label="Toggle patient"
               defaultChecked={true}
               className={`flex items-center gap-1 ${
-                session.user.role === "PATIENT" ? "text-purple-500" : ""
+                session?.user?.role === "PATIENT" ? "text-purple-500" : ""
               }`}
             >
               <div className="flex items-center gap-1 ml-4">
