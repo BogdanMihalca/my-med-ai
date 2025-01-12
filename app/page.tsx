@@ -197,7 +197,7 @@ const LandingPage = () => {
       </div>
 
       {/* Features Grid with Hover Effects */}
-      <div className="container mx-auto px-6 py-32">
+      <div className="container mx-auto px-6 py-32" id="features">
         <h2 className="text-3xl font-bold text-white text-center mb-4">
           Key Features
         </h2>

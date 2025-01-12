@@ -1,7 +1,19 @@
 "use client";
 
-import { useState } from "react";
-import { Separator } from "./ui/separator";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Separator } from "@/components/ui/separator";
+import {
+  ArrowRight,
+  CheckCircle2,
+  HelpCircle,
+  Loader2,
+  MessageCircle,
+  X,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Progress } from "@/components/ui/progress";
 
 const questions = [
   {
@@ -506,93 +518,178 @@ const ScreeningForm = ({
   const [currentQuestionId, setCurrentQuestionId] = useState(1);
   const [answers, setAnswers] = useState<any>([]);
   const [freeSymptoms, setFreeSymptoms] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   const currentQuestion = questions.find((q) => q.id === currentQuestionId);
 
-  const handleAnswerClick = (nextQuestionId: number, sympth: string) => {
-    setCurrentQuestionId(nextQuestionId);
+  useEffect(() => {
+    setProgress((currentQuestionId / 21) * 100);
+  }, [currentQuestionId]);
+
+  const handleAnswerClick = async (nextQuestionId: number, sympth: string) => {
     setAnswers([...answers, sympth]);
+    setCurrentQuestionId(nextQuestionId);
   };
 
-  const handleDiagnose = () => {
-    // lowercase all
-    const formattedAnswers = answers.map((a: string) => a.toLowerCase());
-    //remove no answers
-    const filteredAnswers = formattedAnswers.filter(
-      (a: string) =>
-        !a.includes("no") && !a.includes("none") && !a.includes("not")
-    );
-    diagnose(filteredAnswers.join(", "));
+  const handleDiagnose = async () => {
+    setIsLoading(true);
+    const formattedAnswers = answers
+      .map((a: string) => a.toLowerCase())
+      .filter(
+        (a: string) =>
+          !a.includes("no") && !a.includes("none") && !a.includes("not")
+      );
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    diagnose(formattedAnswers.join(", "));
     onClose();
   };
 
-  const handleFreeSymptoms = () => {
-    const formattedAnswers = freeSymptoms.split(",").map((a) => a.trim());
+  const handleFreeSymptoms = async () => {
+    if (!freeSymptoms.trim()) return;
+
+    setIsLoading(true);
+    const formattedAnswers = freeSymptoms
+      .split(",")
+      .map((a) => a.trim())
+      .filter(Boolean);
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     diagnose(formattedAnswers.join(", "));
     onClose();
   };
 
   return (
-    <div className="flex flex-col items-center justify-start min-h-screen text-white p-4">
-      <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-xl font-bold mb-4">{currentQuestion?.question}</h2>
-        <div className="space-y-4">
-          {currentQuestion?.answers.map((answer, index) => (
-            <button
-              key={index}
-              onClick={() =>
-                handleAnswerClick(answer.nextQuestionId, answer.possibleSymptom)
-              }
-              className={`w-full py-2 px-4 rounded ${
-                answer.text.toLowerCase() === "no"
-                  ? "bg-gray-700 hover:bg-gray-800 focus:ring-gray-600"
-                  : "bg-gray-900 hover:bg-gray-950 focus:ring-gray-800"
-              } focus:outline-none focus:ring-2 text-start text-sm`}
-            >
-              {answer.text}
-            </button>
-          ))}
-
-          {currentQuestionId === 21 && (
-            <button
-              onClick={handleDiagnose}
-              className="w-full py-2 px-4 rounded bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:outline-none focus:ring-2 text-start text-sm"
-            >
-              Submit
-            </button>
-          )}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex flex-col items-center justify-start min-h-screen text-white p-4"
+    >
+      <div className="w-full max-w-md">
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-xl font-semibold">Symptom Screening</h1>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onClose}
+            className="hover:bg-slate-700/50"
+          >
+            <X className="h-4 w-4" />
+          </Button>
         </div>
-      </div>
 
-      <div className="flex items-center justify-center mt-4 w-full">
-        <Separator className="flex-1 mr-2 h-4" />
-        OR
-        <Separator className="flex-1 ml-2 h-4" />
-      </div>
+        <Progress value={progress} className="mb-6" />
 
-      <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md mt-5">
-        <p className="text-sm text-gray-400">
-          If you&apos;re not sure about the answer, you can skip the question
-          and continue by entering the symptoms you&apos;re experiencing.
-          <br /> <br />
-          Enter them comma separated
-        </p>
-
-        <textarea
-          className="w-full py-2 px-4 rounded bg-gray-900 hover:bg-gray-950 focus:ring-gray-800 focus:outline-none focus:ring-2 text-start text-sm mt-4"
-          value={freeSymptoms}
-          onChange={(e) => setFreeSymptoms(e.target.value)}
-          rows={4}
-        />
-
-        <button
-          onClick={handleFreeSymptoms}
-          className=" py-2 px-4 rounded bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:outline-none focus:ring-2 text-center text-sm mt-4"
+        <motion.div
+          key={currentQuestionId}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          className="bg-slate-800 p-6 rounded-lg shadow-lg mb-6"
         >
-          Continue
-        </button>
+          <div className="flex items-start gap-3 mb-6">
+            <HelpCircle className="w-5 h-5 text-blue-400 flex-shrink-0 mt-1" />
+            <div>
+              <h2 className="text-xl font-bold mb-2">
+                {currentQuestion?.question}
+              </h2>
+              <p className="text-sm text-slate-400">
+                Question {currentQuestionId} of 21
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <AnimatePresence mode="sync">
+              {currentQuestion?.answers.map((answer, index) => (
+                <motion.button
+                  key={index}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ delay: index * 0.1 }}
+                  onClick={() =>
+                    handleAnswerClick(
+                      answer.nextQuestionId,
+                      answer.possibleSymptom
+                    )
+                  }
+                  disabled={isLoading}
+                  className={`w-full py-3 px-4 rounded-lg flex items-center justify-between
+                    ${
+                      answer.text.toLowerCase() === "no"
+                        ? "bg-slate-700 hover:bg-slate-600"
+                        : "bg-slate-700/50 hover:bg-slate-600/50"
+                    } transition-colors duration-200`}
+                >
+                  <span className="text-sm">{answer.text}</span>
+                  <ArrowRight className="w-4 h-4 text-slate-400" />
+                </motion.button>
+              ))}
+            </AnimatePresence>
+
+            {currentQuestionId === 21 && (
+              <Button
+                onClick={handleDiagnose}
+                disabled={isLoading}
+                className="w-full py-6"
+              >
+                {isLoading ? (
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                ) : (
+                  <CheckCircle2 className="w-4 h-4 mr-2" />
+                )}
+                Complete Screening
+              </Button>
+            )}
+          </div>
+        </motion.div>
+
+        <div className="flex items-center gap-4 my-6">
+          <Separator className="flex-1" />
+          <span className="text-slate-400 text-sm">OR</span>
+          <Separator className="flex-1" />
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-slate-800 p-6 rounded-lg shadow-lg"
+        >
+          <div className="flex items-start gap-3 mb-4">
+            <MessageCircle className="w-5 h-5 text-blue-400 flex-shrink-0 mt-1" />
+            <div>
+              <h3 className="font-semibold mb-2">Describe Your Symptoms</h3>
+              <p className="text-sm text-slate-400">
+                Enter your symptoms separated by commas
+              </p>
+            </div>
+          </div>
+
+          <Textarea
+            value={freeSymptoms}
+            onChange={(e) => setFreeSymptoms(e.target.value)}
+            placeholder="E.g., headache, fever, sore throat"
+            className="mb-4 bg-slate-900/50 border-slate-700"
+            rows={4}
+          />
+
+          <Button
+            onClick={handleFreeSymptoms}
+            disabled={isLoading || !freeSymptoms.trim()}
+            className="w-full"
+          >
+            {isLoading ? (
+              <Loader2 className="w-4 h-4 animate-spin mr-2" />
+            ) : (
+              <CheckCircle2 className="w-4 h-4 mr-2" />
+            )}
+            Submit Symptoms
+          </Button>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

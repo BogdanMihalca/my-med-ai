@@ -9,6 +9,7 @@ import ThemeProvider from "@/components/theme-provider";
 import type { Metadata } from "next";
 
 import "./globals.css";
+import { Session } from "next-auth";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +24,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>

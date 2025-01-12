@@ -5,24 +5,192 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url = env("DATABASE_URL") // uses connection pooling
+  url      = env("DATABASE_URL")
 }
- 
+
+enum UserRole {
+  PATIENT
+  DOCTOR
+}
+
 model User {
   id            String          @id @default(cuid())
   name          String?
   email         String          @unique
   emailVerified DateTime?
   image         String?
+  role          UserRole        @default(PATIENT)
   accounts      Account[]
-  sessions      Session[]
-  // Optional for WebAuthn support
-  Authenticator Authenticator[]
- 
+  
+  // Relations based on role
+  patientProfile   PatientProfile? // Only for PATIENT
+  doctorProfile    DoctorProfile?  // Only for DOCTOR
+  appointments     Appointment[]   @relation("PatientAppointments")
+  doctorAppointments Appointment[] @relation("DoctorAppointments")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
- 
+
+model PatientProfile {
+  id                      String    @id @default(cuid())
+  userId                  String    @unique
+  user                    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Personal Information
+  dateOfBirth            DateTime?
+  gender                 String?
+  contactNumber         String?
+
+  // Medical Information
+  medicalConditions     MedicalCondition[]
+  medications           Medication[]
+  allergies             Allergy[]
+  surgeries             Surgery[]
+
+  // Family History
+  familyHistory         FamilyHistory[]
+
+  // Social History
+  socialHistory        SocialHistory?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DoctorProfile {
+  id                String    @id @default(cuid())
+  userId            String    @unique
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  specialty         String
+  description       String    @db.Text
+  license          String    @unique
+  location         String
+  availableHours   Json      // Store working hours as JSON
+  nextAvailable    DateTime?
+  rating           Float     @default(0)
+  reviewCount      Int       @default(0)
+  imageUrl         String?
+  verified         Boolean   @default(false)
+  hasAwards        Boolean   @default(false)
+  languages        String[]  @default([])
+  experience       String
+  consultationFee  Decimal   @default(0) @db.Decimal(10, 2)
+  insuranceAccepted Boolean  @default(false)
+  education        String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([specialty])
+  @@index([rating])
+}
+
+model Appointment {
+  id          String    @id @default(cuid())
+  datetime    DateTime
+  status      AppointmentStatus @default(SCHEDULED)
+  notes       String?
+
+  // Relations
+  patientId   String
+  patient     User      @relation("PatientAppointments", fields: [patientId], references: [id])
+  doctorId    String
+  doctor      User      @relation("DoctorAppointments", fields: [doctorId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([patientId])
+  @@index([doctorId])
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+  RESCHEDULED
+}
+
+// Medical Information Models
+model MedicalCondition {
+  id              String    @id @default(cuid())
+  condition       String
+  diagnosedDate   DateTime?
+  notes           String?
+  patientId       String
+  patient         PatientProfile @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Medication {
+  id              String    @id @default(cuid())
+  name            String
+  dosage          String
+  frequency       String
+  startDate       DateTime?
+  endDate         DateTime?
+  patientId       String
+  patient         PatientProfile @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Allergy {
+  id              String    @id @default(cuid())
+  allergen        String
+  reaction        String
+  severity        String?
+  patientId       String
+  patient         PatientProfile @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Surgery {
+  id              String    @id @default(cuid())
+  procedure       String
+  date            DateTime
+  notes           String?
+  patientId       String
+  patient         PatientProfile @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FamilyHistory {
+  id              String    @id @default(cuid())
+  relation        String
+  condition       String
+  age             Int?
+  notes           String?
+  patientId       String
+  patient         PatientProfile @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SocialHistory {
+  id              String    @id @default(cuid())
+  alcohol         String?
+  smoking         String?
+  exercise        String?
+  occupation      String?
+  patientId       String    @unique
+  patient         PatientProfile @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Keep your existing authentication models
 model Account {
   userId            String
   type              String
@@ -35,45 +203,11 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
- 
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@id([provider, providerAccountId])
-}
- 
-model Session {
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
- 
-model VerificationToken {
-  identifier String
-  token      String
-  expires    DateTime
- 
-  @@id([identifier, token])
-}
- 
-// Optional for WebAuthn support
-model Authenticator {
-  credentialID         String  @unique
-  userId               String
-  providerAccountId    String
-  credentialPublicKey  String
-  counter              Int
-  credentialDeviceType String
-  credentialBackedUp   Boolean
-  transports           String?
- 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
-  @@id([userId, credentialID])
 }

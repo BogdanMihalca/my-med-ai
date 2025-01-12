@@ -1,64 +1,82 @@
-# AI-Driven Healthcare Platform
+# MediConnect - AI-Powered Medical Referral Platform
 
-A Next.js-based medical referral system that uses AI to streamline the connection between patients and specialists, developed for the Faithbase HackTech Challenge.
+![MediConnect Banner](/public/ss7.png)
 
-## Problem Statement
+MediConnect is an innovative AI-driven healthcare platform that revolutionizes the medical referral process. Built during an AI hackathon, it combines locally trained BERT models with OpenAI capabilities to provide accurate symptom analysis and specialist matching.
 
-In healthcare systems worldwide, particularly in Romania, the referral process between primary care physicians and specialists faces significant challenges:
+## 🌟 Key Features
 
-- Inefficient medical referrals
-- Redundant testing and diagnosis
-- Delays in treatment for critical conditions
-- Poor patient outcomes due to lack of timely specialist care
+### For Patients
 
-These issues not only affect patient health but also contribute to healthcare system inefficiencies, increasing costs and resource strain.
+- **Smart Symptom Analysis**
+  - Client-side inference using ONNX-optimized BERT model
+  - Parallel analysis with OpenAI agent for comparative results
+  - Interactive symptom input through guided journey or free text
+  - Downloadable PDF reports with detailed analysis
+  - Confidence score visualization with interactive charts
+  - Direct Google search integration for condition details
 
-## Solution Overview
+### For Healthcare Providers
 
-Our AI-powered medical referral system streamlines and automates the referral process using advanced machine learning models, including BERT and integration with OpenAI's capabilities.
+- **Professional Dashboard**
+  - Appointment management system
+  - Patient data organization
+  - Schedule optimization tools
 
-### Key Features
+### Core Platform Features
 
-#### For Patients
+- **Modern Authentication**
+  - Google integration via NextAuth
+  - Secure session management
+- **Beautiful UI/UX**
+  - Responsive landing page
+  - Intuitive pricing panel
+  - Dark/light mode support
+- **Data Management**
+  - Prisma ORM integration
+  - Neon Edge database for scalability
+  - HIPAA-compliant data handling
 
-- **Smart Account Management:** Secure patient portal for managing medical information
-- **AI-Powered Symptom Analysis:**
-  - Utilizes a custom BERT model trained on the SymptomsDisease246k dataset
-  - Processes patient symptoms to suggest potential diagnoses
-- **Intelligent Specialist Matching:** Recommends appropriate specialists based on AI analysis
-- **Secure Medical Record Management:** Complete control over personal health information sharing
+## 🚀 Technical Stack
 
-#### For Specialists
+### Frontend
 
-- **Professional Dashboard:** Comprehensive view of patient referrals and appointments
-- **Patient History Access:** Secure access to shared patient records
-- **Schedule Optimization:** AI-driven appointment scheduling based on urgency and availability
+- **Next.js 14+** - React framework for production
+- **React 19** - UI library
+- **TailwindCSS** - Utility-first CSS
+- **Radix UI** - Accessible component primitives
+- **Framer Motion** - Animation library
+- **Recharts** - Visualization components
 
-### Technical Implementation
+### Backend & Database
 
-#### Machine Learning Model
+- **Prisma** - Type-safe ORM
+- **Neon Database** - Serverless Postgres
+- **NextAuth** - Authentication
+- **OpenAI API** - AI agent integration
 
-- **Dataset:** [SymptomsDisease246k](https://huggingface.co/datasets/fhai50032/SymptomsDisease246k)
-  - 246,000+ symptom-disease pairs
-  - Used for training our BERT model in symptom analysis
-- **Model Architecture:**
-  - Fine-tuned BERT model for symptom classification
-  - Custom tokenization and preprocessing pipeline
-  - Weighted prediction system for accurate disease prediction
+### AI/ML Components
 
-#### Tech Stack
+- **Custom BERT Model**
+  - Trained on SymptomsDisease246k dataset
+  - Converted to ONNX for client-side inference
+- **Transformers.js** - Client-side ML inference
+- **OpenAI Integration** - Comparative analysis
 
-- Next.js for frontend and API routes
-- BERT model for symptom analysis
-- OpenAI integration for advanced diagnostics
-- Secure authentication and data encryption
+## 📈 Performance & Optimization
 
-## Getting Started
+- Client-side ML inference for reduced latency
+- Optimized bundle size with Next.js
+- Edge-ready database with Neon
+- Analytics integration via Vercel
+
+## 🛠️ Installation
 
 1. Clone the repository
 
 ```bash
-git clone [repository-url]
+git clone https://github.com/yourusername/mediconnect.git
+cd mediconnect
 ```
 
 2. Install dependencies
@@ -75,7 +93,22 @@ yarn install
 cp .env.example .env.local
 ```
 
-4. Run the development server
+Required environment variables:
+
+- `DATABASE_URL` - Neon database connection string
+- `NEXTAUTH_SECRET` - Authentication secret
+- `GOOGLE_CLIENT_ID` - Google OAuth client ID
+- `GOOGLE_CLIENT_SECRET` - Google OAuth client secret
+- `OPENAI_API_KEY` - OpenAI API key
+
+4. Initialize Prisma
+
+```bash
+npx prisma generate
+npx prisma db push
+```
+
+5. Run the development server
 
 ```bash
 npm run dev
@@ -83,49 +116,62 @@ npm run dev
 yarn dev
 ```
 
-The application will be available at [http://localhost:3000](http://localhost:3000)
+## 📸 Screenshots
 
-## Future Roadmap
+![Landing Page](/public/ss7.png)
+_Beautiful landing page with modern design_
 
-- OCR integration for paper document digitization
-- Telehealth platform integration
-- Personalized treatment plan generation
-- Medication management system
-- Real-time symptom tracking
+![Symptom Analysis](/public/ss2.png)
+_AI-powered symptom analysis interface_
 
-## Benefits
+![Medical records management](/public/ss5.png)
+_Patient medical records management_
 
-- **Faster Care Access:** Streamlined referral process for timely specialist care
-- **Reduced Administration:** Automated processes save time for healthcare providers
-- **Improved Accuracy:** AI-driven matching ensures appropriate specialist referrals
-- **Better Resource Management:** Optimized scheduling and resource allocation
-- **Enhanced Patient Experience:** User-friendly interface and improved care coordination
+![Appointment Scheduling](/public/ss3.png)
+_Appointment scheduling system_
 
-## Security and Compliance
+![Symptom Analysis Report](/public/ss4.png)
+_Detailed symptom analysis report_
 
-- HIPAA-compliant data handling
-- End-to-end encryption for sensitive information
-- Regular security audits and updates
-- Patient-controlled data sharing
+![Screening form](/public/ss1.png)
+_Interactive symptom input form_
 
-## Contributing
+![Pricing Page](/public/ss8.png)
+_Intuitive pricing panel_
 
-We welcome contributions to improve the platform. Please read our contributing guidelines before submitting pull requests.
+![Doctor Dashboard](/public/ss9.png)
+_Professional healthcare provider dashboard_
 
-## License
+## 🔜 Roadmap
 
-[Add License Information]
+- [ ] Complete appointment management system
+- [ ] Enhanced medical history tracking
+- [ ] Integration with electronic health records
+- [ ] Mobile application development
+- [ ] Multi-language support
+- [ ] Advanced analytics dashboard
+- [ ] Telehealth integration
 
-## Acknowledgments
+## 🤝 Contributing
 
-- Faithbase HackTech mentors for the challenge opportunity
-- The Hugging Face team for providing the SymptomsDisease246k dataset
-- All contributors and participants in the hackathon
+Contributions are welcome! Please read our [Contributing Guidelines](CONTRIBUTING.md) before submitting pull requests.
 
-## Contact
+## 📄 License
 
-- Adela Tanca - adeltaancaa@gmail.com
-- Briana Filip - brianafilip.13@mail.com
-- Pop Lucian - lucipop1@hotmail.com
-- Botis Vlad - vgbotis@gmail.com
-- Bogdan Mihalca - mihalca_b@yahoo.ro
+This project is licensed under the [MIT License](LICENSE.md).
+
+## 👥 Team
+
+- Bogdan Mihalca - Project Lead & AI Development
+- Briana Filip - Frontend Development
+- Pop Lucian - Backend Architecture
+- Botis Vlad - ML Engineering
+- Adela Tanca - UI/UX Design
+
+## 📞 Contact
+
+For questions and support, please contact me at [mailto:mihalcabogdan8@gmail.com]
+
+---
+
+Built with ❤️ during the Faithbase HackTech Challenge

@@ -9,7 +9,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -23,15 +22,49 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut } from "lucide-react";
+import { Hospital, LogOut, PersonStanding } from "lucide-react";
 import { Icons } from "@/components/icons";
+import { ToggleGroup } from "./ui/toggle-group";
+import { ToggleGroupItem } from "@radix-ui/react-toggle-group";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export function LoginButton() {
   const [open, setOpen] = useState(false);
   const { data: session, status } = useSession();
+  const [isOpenAlert, setIsOpenAlert] = useState(false);
+  const [role, setRole] = useState("PATIENT");
 
   const handleGoogleLogin = async () => {
-    await signIn("google");
+    await signIn("google", { redirectTo: "/" });
+  };
+
+  const updateUserRole = async (role: string) => {
+    await fetch("/api/user", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ role }),
+    })
+      .then(() => {
+        signOut({ redirectTo: "/" });
+      })
+      .catch((error) => console.error(error));
+  };
+
+  const handleRoleChange = async (role: string) => {
+    setRole(role);
+    setIsOpenAlert(true);
   };
 
   if (status === "loading") {
@@ -49,8 +82,8 @@ export function LoginButton() {
   if (status === "authenticated") {
     return (
       <DropdownMenu>
-        <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-colors">
-          <DropdownMenuTrigger asChild>
+        <DropdownMenuTrigger asChild>
+          <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-colors cursor-pointer">
             <Avatar className="cursor-pointer border-2 border-blue-500/20">
               <AvatarImage
                 src={session.user?.image as string}
@@ -63,19 +96,51 @@ export function LoginButton() {
                   .join("")}
               </AvatarFallback>
             </Avatar>
-          </DropdownMenuTrigger>
-          <span className="text-sm font-medium">
-            {session.user?.name || session.user?.email}
-          </span>
-        </div>
+            <span className="text-sm font-medium">
+              {session.user?.name || session.user?.email}
+            </span>
+          </div>
+        </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56 bg-gray-800/90 backdrop-blur-sm border-gray-700">
           <DropdownMenuLabel className="text-gray-400">
             {session.user?.email}
           </DropdownMenuLabel>
+          <ToggleGroup
+            type="single"
+            className="py-4"
+            onValueChange={handleRoleChange}
+          >
+            <ToggleGroupItem
+              value="DOCTOR"
+              aria-label="Toggle doctor"
+              className={`flex items-center gap-1 ${
+                session.user.role === "DOCTOR" ? "text-purple-500" : ""
+              }`}
+            >
+              <div className="flex items-center gap-1">
+                <Hospital className="h-6 w-6" />
+                Doctor
+              </div>
+            </ToggleGroupItem>
+
+            <ToggleGroupItem
+              value="PATIENT"
+              aria-label="Toggle patient"
+              defaultChecked={true}
+              className={`flex items-center gap-1 ${
+                session.user.role === "PATIENT" ? "text-purple-500" : ""
+              }`}
+            >
+              <div className="flex items-center gap-1 ml-4">
+                <PersonStanding className="h-6 w-6" />
+                Patient
+              </div>
+            </ToggleGroupItem>
+          </ToggleGroup>
           <DropdownMenuSeparator className="bg-gray-700" />
           <DropdownMenuGroup>
             <DropdownMenuItem
-              onClick={() => signOut()}
+              onClick={() => signOut({ redirectTo: "/" })}
               className="text-red-400 hover:text-red-300 cursor-pointer"
             >
               <LogOut className="mr-2 h-4 w-4" />
@@ -83,6 +148,22 @@ export function LoginButton() {
               <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
             </DropdownMenuItem>
           </DropdownMenuGroup>
+          <AlertDialog open={isOpenAlert} onOpenChange={setIsOpenAlert}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  You will have to log in again to access your account
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={() => updateUserRole(role)}>
+                  Continue
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </DropdownMenuContent>
       </DropdownMenu>
     );

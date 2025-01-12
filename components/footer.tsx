@@ -120,7 +120,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-gray-800">
           <div className="text-gray-400 text-sm flex items-center">
-            © {new Date().getFullYear()} MedConnect. Made with
+            © {new Date().getFullYear()} MediConnect. Made with
             <Heart className="h-4 w-4 text-red-400 mx-1" />
             in Romania
           </div>

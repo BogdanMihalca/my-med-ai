@@ -12,8 +12,13 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { LoginButton } from "./login-button";
+import { auth } from "@/auth";
+import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
 
 export function Navbar() {
+  const { data: session } = useSession();
+  const currentPath = usePathname();
   const [isOfferDismissed, setIsOfferDismissed] =
     React.useState<boolean>(false);
 
@@ -26,6 +31,8 @@ export function Navbar() {
     setIsOfferDismissed(true);
     window.localStorage.setItem("isOfferDismissed", "true");
   };
+
+  const isDoctor = session?.user?.role === "DOCTOR";
 
   return (
     <>
@@ -49,40 +56,87 @@ export function Navbar() {
         </div>
       )}
       <div className="container mx-auto px-4">
-        <NavigationMenu className="flex justify-between items-center mb-4 py-4 w-full max-w-full">
-          <div className="flex items-center">
-            <Heart className="h-8 w-8 text-purple-500" />
-            <span className="ml-2 text-2xl font-bold hidden md:inline">
-              MediConnect
-            </span>
-          </div>
+        <NavigationMenu className="flex justify-between items-center py-2 w-full max-w-full">
+          <Link href="/">
+            <div className="flex items-center">
+              <Heart className="h-8 w-8 text-purple-500" />
+              <span className="ml-2 text-2xl font-bold hidden md:inline">
+                MediConnect
+              </span>
+            </div>
+          </Link>
           <NavigationMenuList className="space-x-8">
-            <NavigationMenuItem>
-              <Link href="/features" legacyBehavior passHref>
-                <NavigationMenuLink
-                  className={cn(
-                    navigationMenuTriggerStyle(),
-                    "text-gray-300 hover:text-purple-500 hidden md:inline"
-                  )}
-                >
-                  Features
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
+            {!session?.user ? (
+              <>
+                <NavigationMenuItem>
+                  <Link href="/#features" legacyBehavior passHref>
+                    <NavigationMenuLink
+                      className={cn(
+                        navigationMenuTriggerStyle(),
+                        "text-gray-300 hover:text-purple-500 hidden md:inline",
+                        `${
+                          currentPath === "/#features" ? "text-purple-500" : ""
+                        }`
+                      )}
+                    >
+                      Features
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
 
-            <NavigationMenuItem>
-              <Link href="/pricing" legacyBehavior passHref>
-                <NavigationMenuLink
-                  className={cn(
-                    navigationMenuTriggerStyle(),
-                    "text-gray-300 hover:text-purple-500 hidden md:inline"
-                  )}
-                >
-                  Pricing
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-
+                <NavigationMenuItem>
+                  <Link href="/pricing" legacyBehavior passHref>
+                    <NavigationMenuLink
+                      className={cn(
+                        navigationMenuTriggerStyle(),
+                        "text-gray-300 hover:text-purple-500 hidden md:inline",
+                        `${currentPath === "/pricing" ? "text-purple-500" : ""}`
+                      )}
+                    >
+                      Pricing
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+              </>
+            ) : (
+              <>
+                {isDoctor ? (
+                  <NavigationMenuItem>
+                    <Link href="/dashboard" legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={cn(
+                          navigationMenuTriggerStyle(),
+                          "text-gray-300 hover:text-purple-500 hidden md:inline",
+                          `${
+                            currentPath === "/dashboard"
+                              ? "text-purple-500"
+                              : ""
+                          }`
+                        )}
+                      >
+                        Dashboard
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                ) : (
+                  <NavigationMenuItem>
+                    <Link href="/records" legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={cn(
+                          navigationMenuTriggerStyle(),
+                          "text-gray-300 hover:text-purple-500 hidden md:inline",
+                          `${
+                            currentPath === "/records" ? "text-purple-500" : ""
+                          }`
+                        )}
+                      >
+                        My Medical Records
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                )}
+              </>
+            )}
             <NavigationMenuItem>
               <LoginButton />
             </NavigationMenuItem>
